@@ -27,7 +27,7 @@ def to_carbon(data):
     for job in data['jobs']:
         flat_data = flatten_dict(job)
         for key in flat_data:
-            metric_name = re.sub('>=', 'gt-', key)
+            metric_name = re.sub('>=', 'gte-', key)
             value = flat_data[key]
             metrics.append("%s.%s %s %s" % (
                 METRIC_PREFIX,
