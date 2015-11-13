@@ -1,6 +1,10 @@
 # fio-graphite
 Take json output from fio and convert/ship metrics to a graphite ( carbon-cache) instance.
 
-#Example
+# Example
 
-``fio --name=random-writers --ioengine=libaio --iodepth=4 --rw=randwrite --bs=32k --direct=0 --size=100M --numjobs=5 --output-format=json | ./fio-graphite.py``
+``fio --name=fio-graphite --rw=readwrite --size=100M --output-format=json | ./fio-graphite.py``
+
+
+# TODO
+* Stream JSON from fio using --status-interval
