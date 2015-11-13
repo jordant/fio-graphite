@@ -6,8 +6,11 @@ Take json output from fio and convert/ship metrics to a graphite instance.
 * CARBON_PORT
 * METRICS_PREFIX 
 
+## Installation
+``pip install git+https://github.com/jordant/fio-graphite.git``
+
 ## Example Usage
-``fio --name=fio-graphite --rw=readwrite --size=100M --output-format=json | ./fio-graphite.py``
+``fio --name=fio-graphite --rw=readwrite --size=100M --output-format=json | fio-graphite``
 
 ## TODO
 * Stream JSON from fio using --status-interval
