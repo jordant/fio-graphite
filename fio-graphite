@@ -1,0 +1,72 @@
+#!/usr/bin/env python
+from __future__ import print_function
+import json
+import os
+import re
+import socket
+import sys
+import time
+
+CARBON_HOST = os.getenv('CARBON_HOST', '127.0.0.1')
+CARBON_PORT = os.getenv('CARBON_PORT', 2003)
+METRIC_PREFIX = os.getenv('METRIC_PREFIX', 'fio')
+
+
+def parse():
+    try:
+        pipe_input = ''.join(sys.stdin)
+        fio_dict = json.loads(pipe_input)
+    except subprocess.CalledProcessError as err:
+        print('{0}: json parse failed ({1})'.format(err))
+    return fio_dict
+
+
+def to_carbon(data):
+    metrics = []
+    timestamp = int(time.time())
+    for job in data['jobs']:
+        flat_data = flatten_dict(job)
+        for key in flat_data:
+            metric_name = re.sub('>=', 'gt-', key)
+            value = flat_data[key]
+            metrics.append("%s.%s %s %s" % (
+                METRIC_PREFIX,
+                metric_name,
+                value,
+                timestamp
+                )
+            )
+    return metrics
+
+
+def flatten_dict(d):
+    def items():
+        for key, value in d.items():
+            if isinstance(value, dict):
+                for subkey, subvalue in flatten_dict(value).items():
+                    yield key + "." + subkey, subvalue
+            else:
+                yield key, value
+    return dict(items())
+
+
+def ship(metrics):
+    try:
+        sock = socket.socket()
+        sock.settimeout(5)
+        sock.connect((CARBON_HOST, int(CARBON_PORT)))
+        print("\n".join(metrics))
+        sock.send("\n".join(metrics))
+        sock.close()
+    except Exception as err:
+        print("Socket error : %s:%s %s" % (CARBON_HOST, CARBON_PORT, err))
+        return
+
+
+if __name__ == '__main__':
+    try:
+        fio_data = parse()
+        metrics = to_carbon(fio_data)
+        ship(metrics)
+    except Exception as err:
+        print("error shipping")
