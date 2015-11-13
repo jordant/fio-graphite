@@ -8,3 +8,4 @@ Take json output from fio and convert/ship metrics to a graphite ( carbon-cache)
 
 # TODO
 * Stream JSON from fio using --status-interval
+* Use graphitesend for shiping 
