@@ -9,7 +9,7 @@ setup(
     author_email='jordan.tardif@gmail.com',
     url='https://github.com/jordant/fio-graphite',
     scripts=[
-        'fio-graphite'
+        'bin/fio-graphite'
     ],
     packages=find_packages(),
     include_package_data=True,
