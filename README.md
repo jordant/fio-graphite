@@ -15,3 +15,6 @@ Take json output from fio and convert/ship metrics to a graphite instance.
 ## TODO
 * Stream JSON from fio using --status-interval
 * Use graphitesend for shiping 
+
+
+![graphite-fio](http://objects.dreamhost.com/public-github/fio-graphite.png)
